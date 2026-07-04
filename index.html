@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>Moaaz Chat</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,500;1,400&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="h-screen w-screen overflow-hidden text-ivory">
+
+<!-- ============ AUTH SCREEN ============ -->
+<div id="auth-screen" class="h-screen w-screen flex items-center justify-center bg-ink px-4">
+  <div class="w-full max-w-sm">
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gold mb-3">
+        <svg viewBox="0 0 24 24" class="w-7 h-7 text-ink" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z"/>
+          <path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5v-13Z"/>
+        </svg>
+      </div>
+      <h1 class="font-display text-3xl text-ivory tracking-tight">Moaaz <span class="text-gold">Chat</span></h1>
+      <p class="text-muted text-sm mt-1 font-read italic">a quiet room for readers to talk</p>
+    </div>
+
+    <div class="bg-panel rounded-2xl p-6 shadow-2xl">
+      <div class="flex mb-6 border-b border-white/10">
+        <button id="tab-login" class="flex-1 pb-3 text-sm font-medium text-gold border-b-2 border-gold">Sign In</button>
+        <button id="tab-signup" class="flex-1 pb-3 text-sm font-medium text-muted">Sign Up</button>
+      </div>
+
+      <div id="login-form" class="space-y-4">
+        <div>
+          <label class="text-xs text-muted uppercase tracking-wide">Email</label>
+          <input id="login-email" type="email" class="ruled-input w-full py-2 text-ivory" placeholder="you@moaazchat.com" />
+        </div>
+        <div>
+          <label class="text-xs text-muted uppercase tracking-wide">Password</label>
+          <input id="login-password" type="password" class="ruled-input w-full py-2 text-ivory" placeholder="••••••••" />
+        </div>
+        <button id="btn-login" class="w-full bg-gold text-ink font-medium py-2.5 rounded-lg mt-2 hover:bg-gold-soft transition">Enter the room</button>
+      </div>
+
+      <div id="signup-form" class="space-y-4 hidden">
+        <div>
+          <label class="text-xs text-muted uppercase tracking-wide">Display name</label>
+          <input id="signup-name" type="text" class="ruled-input w-full py-2 text-ivory" placeholder="Jane Austen" />
+        </div>
+        <div>
+          <label class="text-xs text-muted uppercase tracking-wide">Email</label>
+          <input id="signup-email" type="email" class="ruled-input w-full py-2 text-ivory" placeholder="you@moaazchat.com" />
+        </div>
+        <div>
+          <label class="text-xs text-muted uppercase tracking-wide">Password</label>
+          <input id="signup-password" type="password" class="ruled-input w-full py-2 text-ivory" placeholder="min 6 characters" />
+        </div>
+        <button id="btn-signup" class="w-full bg-gold text-ink font-medium py-2.5 rounded-lg mt-2 hover:bg-gold-soft transition">Create account</button>
+      </div>
+
+      <p id="auth-msg" class="text-sm text-center mt-4 font-read"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP SCREEN ============ -->
+<div id="app-screen" class="hidden h-screen w-screen">
+  <div class="flex h-full">
+
+    <!-- ICON RAIL -->
+    <aside class="bg-rail w-16 flex flex-col items-center py-5 gap-2 shrink-0">
+      <div class="w-9 h-9 rounded-full bg-gold flex items-center justify-center mb-4">
+        <svg viewBox="0 0 24 24" class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5v-13Z"/></svg>
+      </div>
+      <button data-view="chats" class="nav-btn w-10 h-10 rounded-xl flex items-center justify-center text-gold bg-white/5">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12c0 4.14-4.03 7.5-9 7.5-.94 0-1.84-.12-2.69-.34L4 20.5l1.3-3.9C4.48 15.4 4 13.76 4 12c0-4.14 4.03-7.5 9-7.5s8 3.36 8 7.5Z"/></svg>
+      </button>
+      <button data-view="friends" class="nav-btn w-10 h-10 rounded-xl flex items-center justify-center text-muted">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="8" r="3.2"/><path d="M2.7 19c.8-3 3.2-5 6.3-5s5.5 2 6.3 5"/><circle cx="17" cy="8.5" r="2.4"/><path d="M16 13.6c2.4.2 4.3 2 5 4.9"/></svg>
+      </button>
+      <button data-view="groups" class="nav-btn w-10 h-10 rounded-xl flex items-center justify-center text-muted">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="7" height="16" rx="1"/><rect x="12" y="7" width="9" height="13" rx="1"/></svg>
+      </button>
+      <div class="flex-1"></div>
+      <button id="btn-open-profile" class="w-10 h-10 rounded-full overflow-hidden border-2 border-gold" title="Profile"></button>
+      <button id="btn-logout" class="w-10 h-10 rounded-xl flex items-center justify-center text-muted hover:text-crimson" title="Sign out">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 4H6.5A1.5 1.5 0 0 0 5 5.5v13A1.5 1.5 0 0 0 6.5 20H9M16 16l4-4-4-4M20 12H9"/></svg>
+      </button>
+    </aside>
+
+    <!-- LIST PANEL -->
+    <section id="list-panel" class="bg-panel w-full sm:w-[340px] shrink-0 flex flex-col spine-shadow">
+      <!-- Stories bar -->
+      <div id="stories-bar" class="flex gap-3 px-4 pt-4 pb-3 overflow-x-auto hidden-scroll border-b border-white/10"></div>
+
+      <div class="px-4 pt-3 pb-2">
+        <h2 id="list-title" class="font-display text-xl text-ivory">Chapters</h2>
+      </div>
+      <div class="px-4 pb-2">
+        <input id="list-search" type="text" placeholder="Search…" class="ruled-input w-full py-1.5 text-sm text-ivory placeholder:text-muted" />
+      </div>
+
+      <div id="list-container" class="flex-1 overflow-y-auto px-2 pb-4"></div>
+
+      <div id="list-fab-wrap" class="p-3 border-t border-white/10 hidden">
+        <button id="list-fab" class="w-full bg-gold text-ink text-sm font-medium py-2.5 rounded-lg">+ New</button>
+      </div>
+    </section>
+
+    <!-- CHAT PANEL -->
+    <main id="chat-panel" class="hidden sm:flex flex-1 bg-parchment paper-texture flex-col relative">
+      <div id="chat-empty" class="flex-1 flex flex-col items-center justify-center text-parchment-ink/50">
+        <svg viewBox="0 0 24 24" class="w-16 h-16 mb-3" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 19.5V6a2 2 0 0 1 2-2h9.5A2.5 2.5 0 0 1 18 6.5V20"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H18"/></svg>
+        <p class="font-display text-lg">Choose a story to open</p>
+      </div>
+
+      <div id="chat-active" class="hidden flex-1 flex-col h-full">
+        <!-- header -->
+        <div class="flex items-center gap-3 px-4 py-3 bg-parchment-2 border-b border-parchment-ink/10">
+          <button id="btn-back" class="sm:hidden text-parchment-ink"><svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <div id="chat-avatar" class="w-10 h-10 rounded-full bg-gold shrink-0 flex items-center justify-center font-display text-ink font-semibold overflow-hidden"></div>
+          <div class="flex-1 min-w-0">
+            <p id="chat-name" class="font-display text-parchment-ink font-semibold truncate"></p>
+            <p id="chat-sub" class="text-xs text-parchment-ink/60 font-mono"></p>
+          </div>
+        </div>
+        <!-- messages -->
+        <div id="messages" class="flex-1 overflow-y-auto px-4 py-5 space-y-3"></div>
+        <div id="typing-indicator" class="px-4 text-xs text-parchment-ink/50 italic font-read h-5"></div>
+        <!-- composer -->
+        <form id="composer" class="flex items-end gap-2 px-4 py-3 border-t border-parchment-ink/10 bg-parchment-2">
+          <textarea id="msg-input" rows="1" placeholder="Write a line…" class="flex-1 resize-none bg-white/40 focus:bg-white/70 rounded-xl px-4 py-2.5 text-parchment-ink font-read placeholder:text-parchment-ink/40 max-h-28"></textarea>
+          <button type="submit" class="quill-btn w-10 h-10 shrink-0 rounded-full bg-gold flex items-center justify-center">
+            <svg viewBox="0 0 24 24" class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20 4 10.5 13.5M20 4l-6 16-4-8-8-4Z"/></svg>
+          </button>
+        </form>
+        <div id="media-preview" class="hidden px-4 py-2 bg-parchment-2 border-t border-parchment-ink/10"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div id="modal-backdrop" class="hidden fixed inset-0 bg-black/60 z-40 flex items-center justify-center px-4"></div>
+
+<div id="modal-profile" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+  <div class="bg-panel rounded-2xl p-6 w-full max-w-sm fade-in">
+    <h3 class="font-display text-xl text-ivory mb-4">Your bookplate</h3>
+    <div class="flex flex-col items-center mb-4">
+      <div id="profile-avatar-preview" class="w-20 h-20 rounded-full bg-gold flex items-center justify-center font-display text-2xl text-ink font-semibold overflow-hidden mb-2"></div>
+    </div>
+    <label class="text-xs text-muted uppercase tracking-wide">Display name</label>
+    <input id="profile-name-input" type="text" class="ruled-input w-full py-2 text-ivory mb-4" />
+    <div class="flex gap-2">
+      <button id="btn-profile-cancel" class="flex-1 py-2 rounded-lg border border-white/15 text-muted text-sm">Cancel</button>
+      <button id="btn-profile-save" class="flex-1 py-2 rounded-lg bg-gold text-ink text-sm font-medium">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-group" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+  <div class="bg-panel rounded-2xl p-6 w-full max-w-sm fade-in">
+    <h3 class="font-display text-xl text-ivory mb-4">Start a book club</h3>
+    <label class="text-xs text-muted uppercase tracking-wide">Group name</label>
+    <input id="group-name-input" type="text" class="ruled-input w-full py-2 text-ivory mb-4" placeholder="Sunday Reading Circle" />
+    <label class="text-xs text-muted uppercase tracking-wide">Add friends</label>
+    <div id="group-members-list" class="max-h-48 overflow-y-auto mt-2 mb-4 space-y-1"></div>
+    <div class="flex gap-2">
+      <button id="btn-group-cancel" class="flex-1 py-2 rounded-lg border border-white/15 text-muted text-sm">Cancel</button>
+      <button id="btn-group-create" class="flex-1 py-2 rounded-lg bg-gold text-ink text-sm font-medium">Create</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-story-create" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+  <div class="bg-panel rounded-2xl p-6 w-full max-w-sm fade-in">
+    <h3 class="font-display text-xl text-ivory mb-4">Pin a bookmark</h3>
+    <p class="text-xs text-muted mb-3">Visible to friends for 24 hours.</p>
+    <textarea id="story-text-input" rows="3" class="ruled-input w-full py-2 text-ivory mb-3" placeholder="A line worth sharing…"></textarea>
+    <div class="flex gap-2">
+      <button id="btn-story-cancel" class="flex-1 py-2 rounded-lg border border-white/15 text-muted text-sm">Cancel</button>
+      <button id="btn-story-post" class="flex-1 py-2 rounded-lg bg-gold text-ink text-sm font-medium">Post</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-story-view" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+  <div class="w-full max-w-sm h-[85vh] max-h-[600px] rounded-2xl overflow-hidden relative bg-ink-2 fade-in flex flex-col">
+    <div class="absolute top-0 left-0 right-0 h-1 flex gap-1 p-2 z-10" id="story-progress"></div>
+    <button id="btn-story-close" class="absolute top-3 right-3 z-10 text-ivory/80 w-8 h-8 flex items-center justify-center">✕</button>
+    <div id="story-view-body" class="flex-1 flex items-center justify-center p-6 text-center"></div>
+    <div id="story-view-footer" class="p-3 flex items-center gap-2 text-ivory/80 text-xs font-mono"></div>
+  </div>
+</div>
+
+<div id="toast" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 bg-ink-2 text-ivory text-sm px-4 py-2 rounded-full shadow-xl z-50 font-read"></div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
